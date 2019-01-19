@@ -13,7 +13,7 @@ public class ProjectTask {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(updateable = false)
+    @Column(updatable = false)
     private String projectSequence;
     @NotBlank( message = "Please include a project summary")
     private String summary;
@@ -21,12 +21,21 @@ public class ProjectTask {
     private String status;
     private Integer priority;
     private Date dueDate;
+    // many to one with backlog
+
+    @Column(updatable = false)
+    private String projectIdentifier;
     private Date create_At;
     private Date update_At;
 
     @PrePersist
     protected void onCreate() {
         this.create_At = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.update_At = new Date();
     }
 
 }
