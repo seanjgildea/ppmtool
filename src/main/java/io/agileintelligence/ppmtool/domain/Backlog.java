@@ -1,11 +1,9 @@
 package io.agileintelligence.ppmtool.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -16,6 +14,9 @@ public class Backlog {
     private Long id;
     private Integer PTSequence = 0;
     private String projectIdentifier;
-    // one to one mapping
-    // one to many mapping
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="projectId", nullable = false)
+    @JsonIgnore
+    private Project project;
 }

@@ -1,7 +1,9 @@
 package io.agileintelligence.ppmtool.services;
 
+import io.agileintelligence.ppmtool.domain.Backlog;
 import io.agileintelligence.ppmtool.domain.Project;
 import io.agileintelligence.ppmtool.exception.ProjectIdException;
+import io.agileintelligence.ppmtool.repositories.BacklogRespository;
 import io.agileintelligence.ppmtool.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +17,31 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @Autowired
+    private BacklogRespository backlogRespository;
+
     public Project saveOrUpdateProject(Project project) {
 
         try {
-            project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+
+            String uppercaseProjectId = project.getProjectIdentifier().toUpperCase();
+
+            project.setProjectIdentifier(uppercaseProjectId);
+
+            if ( project.getId() == null) {
+
+                Backlog backlog = new Backlog();
+                project.setBacklog(backlog);
+                backlog.setProject(project);
+                backlog.setProjectIdentifier(uppercaseProjectId);
+            }
+
+            if(project.getId() != null ) {
+                project.setBacklog(backlogRespository.findByProjectIdentifier(uppercaseProjectId));
+            }
+
+
+
             return projectRepository.save(project);
         } catch (Exception e ) {
             throw new ProjectIdException("Project ID '" + project.getProjectIdentifier().toUpperCase() + "' is used already");
