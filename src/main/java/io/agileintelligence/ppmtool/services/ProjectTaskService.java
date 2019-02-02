@@ -27,13 +27,15 @@ public class ProjectTaskService {
         projectTask.setBacklog(backlog);
 
         // we want our project sequence to be like this IDPRO-1 IDPRO-2 ... 100 101
-        Integer backlogSequence = backlog.getPTSequence();
+        Integer BacklogSequence = backlog.getPTSequence();
 
         // update the Backlog sequence
-        backlogSequence++;
+        BacklogSequence++;
+
+        backlog.setPTSequence(BacklogSequence);
 
         // Add sequence to PT
-        projectTask.setProjectSequence(projectIdentifier + "-" + backlogSequence );
+        projectTask.setProjectSequence(projectIdentifier + "-" + BacklogSequence );
         projectTask.setProjectIdentifier(projectIdentifier);
 
         // initial priority when priority null
