@@ -10,11 +10,13 @@ import io.agileintelligence.ppmtool.repositories.ProjectTaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProjectTaskService {
 
     @Autowired
-    private BacklogRespository backlogRespository;
+    private BacklogRespository backlogRepository;
 
     @Autowired
     private ProjectTaskRepository projectTaskRepository;
@@ -26,7 +28,7 @@ public class ProjectTaskService {
 
         try {
             // PT's to be added to a specific project, project != null, Backlog exists
-            Backlog backlog = backlogRespository.findByProjectIdentifier(projectIdentifier);
+            Backlog backlog = backlogRepository.findByProjectIdentifier(projectIdentifier);
 
             // Set the backlog to the project task
             projectTask.setBacklog(backlog);
@@ -74,7 +76,7 @@ public class ProjectTaskService {
     public ProjectTask findPTByProjectSequence(String backlog_id, String pt_id) {
 
         // make sure we are searching on an existing backlog
-        Backlog backlog = backlogRespository.findByProjectIdentifier(backlog_id);
+        Backlog backlog = backlogRepository.findByProjectIdentifier(backlog_id);
 
         if (backlog == null ) {
             throw new ProjectNotFoundException("Project with ID '" + backlog_id + "' not found");
@@ -94,4 +96,19 @@ public class ProjectTaskService {
 
         return projectTask;
     }
+
+    public ProjectTask updateByProjectSequence(ProjectTask updatedTask, String backlog_id, String pt_id ){
+
+        ProjectTask projectTask = findPTByProjectSequence(backlog_id, pt_id);
+
+        projectTask = updatedTask;
+
+        return projectTaskRepository.save(projectTask);
+    }
+
+    public void deletePTByProjectSequence(String backlog_id, String pt_id) {
+        ProjectTask projectTask = findPTByProjectSequence(backlog_id, pt_id);
+        projectTaskRepository.delete(projectTask);
+    }
+
 }
