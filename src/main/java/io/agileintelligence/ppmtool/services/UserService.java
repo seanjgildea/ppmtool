@@ -1,6 +1,7 @@
 package io.agileintelligence.ppmtool.services;
 
 import io.agileintelligence.ppmtool.domain.User;
+import io.agileintelligence.ppmtool.exception.DuplicateEmailException;
 import io.agileintelligence.ppmtool.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,16 +17,18 @@ public class UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public User saveUser( User newUser) {
-       newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
 
-       // Username has to be unique ( custom exception )
+        try {
 
-        // Make sure that password and confirmPassword match
+            newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
 
-        // We don't persist or show the confirmPassword
+            newUser.setUsername(newUser.getUsername());
+            newUser.setConfirmPassword("");
+            return userRepository.save(newUser);
 
-        return userRepository.save(newUser);
-
+        } catch (Exception e ) {
+            throw new DuplicateEmailException("Email '" + newUser.getUsername() + "' already exists");
+        }
     }
 
 }
