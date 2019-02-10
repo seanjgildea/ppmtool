@@ -2,17 +2,22 @@ package io.agileintelligence.ppmtool.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class User implements UserDetails {
 
     @Id
@@ -25,7 +30,7 @@ public class User implements UserDetails {
     private String username;
 
     @NotBlank(message = "Please enter your full name")
-    private String fullname;
+    private String fullName;
 
     @NotBlank(message = "Password is required")
     private String password;
@@ -35,6 +40,9 @@ public class User implements UserDetails {
 
     private Date created_At;
     private Date updated_At;
+
+    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true )
+    private List<Project> projects = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() { this.created_At = new Date(); }

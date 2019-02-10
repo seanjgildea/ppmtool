@@ -3,6 +3,8 @@ package io.agileintelligence.ppmtool.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -10,7 +12,8 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Entity
-@Data // project lombok
+@Getter
+@Setter
 public class Project {
 
     @Id
@@ -43,6 +46,12 @@ public class Project {
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "project")
     @JsonIgnore
     private Backlog backlog;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private User user;
+
+    private String projectLeader;
 
     @PrePersist
     protected void onCreate() {

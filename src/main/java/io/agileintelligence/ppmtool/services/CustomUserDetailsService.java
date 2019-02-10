@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Transactional
-    public User loadUserByID(Long id) {
+    public User loadUserById(Long id) {
         User user = userRepository.getById(id);
         return user;
     }

@@ -22,7 +22,7 @@ import io.agileintelligence.ppmtool.domain.User;
 
 import javax.validation.Valid;
 
-import static io.agileintelligence.ppmtool.security.SecurityConstraints.TOKEN_PREFIX;
+import static io.agileintelligence.ppmtool.security.SecurityConstants.TOKEN_PREFIX;
 
 @RestController
 @RequestMapping("/api/users")
